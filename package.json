@@ -1,0 +1,7 @@
+{
+  "name": "goonsquad",
+  "private": true,
+  "dependencies": {
+    "@opencode-ai/plugin": "1.17.15"
+  }
+}

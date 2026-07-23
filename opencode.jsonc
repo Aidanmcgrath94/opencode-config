@@ -1,0 +1,144 @@
+{
+  "plugin": [
+    "./plugin/edit-error-recovery.ts",
+    "./plugin/keyword-detector.ts",
+    "./plugin/goal.ts",
+    "./plugin/rules-injector.ts"
+  ],
+  "default_agent": "Sisyphus - Ultraworker",
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "Sisyphus - Ultraworker": {
+      "description": "Powerful AI orchestrator. Plans obsessively with todos, assesses search complexity before exploration, delegates strategically via subagent selection and skill loading. Uses Explore - Codebase Search for internal code (parallel-friendly), Librarian - Docs Search for external docs.",
+      "mode": "primary",
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "prompt": "{file:./agent-prompts/sisyphus.md}"
+    },
+    "Prometheus - Plan Builder": {
+      "description": "Planning consultant that turns a request into a single decision-complete work plan via the ulw-plan skill. Never implements directly - plan mode is sticky.",
+      "mode": "primary",
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "permission": {
+        "edit": "allow",
+        "bash": "deny",
+        "task": "allow"
+      },
+      "prompt": "{file:./agent-prompts/prometheus.md}"
+    },
+    "Atlas - Plan Executor": {
+      "description": "Orchestrates work via the task tool to complete ALL tasks in a todo list until fully done, with rigorous manual verification and a Final Verification Wave.",
+      "mode": "primary",
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+      "prompt": "{file:./agent-prompts/atlas.md}"
+    },
+    "Explore - Codebase Search": {
+      "description": "Contextual grep for codebases. Answers \"Where is X?\", \"Which file has Y?\", \"Find the code that does Z\". Fire multiple in parallel for broad searches. Specify thoroughness - \"quick\" for basic, \"medium\" for moderate, \"very thorough\" for comprehensive analysis.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/anthropic.claude-haiku-4-5-20251001-v1:0",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/omo-explore.md}"
+    },
+    "Librarian - Docs Search": {
+      "description": "Specialized codebase understanding agent for multi-repository analysis, searching remote codebases, retrieving official documentation, and finding implementation examples using GitHub CLI, Context7, and Web Search. Use when users ask to look up code in remote repositories, explain library internals, or find usage examples in open source.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/anthropic.claude-haiku-4-5-20251001-v1:0",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/omo-librarian.md}"
+    },
+    "Metis - Plan Consultant": {
+      "description": "Pre-planning consultant that analyzes requests to identify hidden intentions, ambiguities, and AI failure points.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/metis.md}"
+    },
+    "Momus - Plan Critic": {
+      "description": "Expert reviewer for evaluating work plans against rigorous clarity, verifiability, and completeness standards.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/momus.md}"
+    },
+    "Multimodal Looker - Vision": {
+      "description": "Analyze media files (PDFs, images, diagrams) that require interpretation beyond raw text. Extracts specific information or summaries from documents, describes visual content. Use when you need analyzed/extracted data rather than literal file contents.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/multimodal-looker.md}"
+    },
+    "Oracle - Architecture Consult": {
+      "description": "Read-only consultation agent. High-IQ reasoning specialist for debugging hard problems and high-difficulty architecture design.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/oracle.md}"
+    },
+    "Sisyphus-Junior": {
+      "description": "Focused task executor. Same discipline as Sisyphus; delegates research to Explore/Librarian only, never spawns further executors.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+      "permission": {
+        "task": {
+          "*": "deny",
+          "Explore - Codebase Search": "allow",
+          "Librarian - Docs Search": "allow"
+        }
+      },
+      "prompt": "{file:./agent-prompts/sisyphus-junior.md}"
+    }
+  },
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true
+    },
+    "grep_app": {
+      "type": "remote",
+      "url": "https://mcp.grep.app",
+      "enabled": true
+    },
+    "websearch": {
+      "type": "remote",
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa",
+      "enabled": true
+    },
+    "ssh-mcp": {
+      "type": "local",
+      "command": ["/Users/aidanmcgrath/.local/bin/ssh-mcp"],
+      "enabled": true,
+      "timeout": 30000
+    }
+  }
+}
