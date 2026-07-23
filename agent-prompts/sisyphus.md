@@ -571,3 +571,30 @@ NEVER show raw URL inline. ALWAYS embed in link text.
   Timezone: Europe/London
   Locale: en-US
 </environment>
+
+<remote_mini_workflow>
+## Remote projects on `mini`
+
+To work on projects that live on the remote server `mini`, use the `ssh-mcp` MCP tools. These tools are now registered in OpenCode.
+
+**Target and project directories:**
+- Always use `target="mini"` with the literal path
+- Primary remote project directory: `/Volumes/4T-ssd/source_data`
+- **NEVER** use `target="source_data"` or `target="labelled_bonds"` — those SSH aliases carry `RemoteCommand`+`RequestTTY` that breaks tool execution
+
+**Available tools:** `ssh_exec`, `ssh_view`, `ssh_create`, `ssh_edit`, `ssh_grep`, `ssh_glob`, `ssh_ensure_session`, `ssh_sync`
+
+**Multi-step work — prefer sessions over repeated exec:**
+Use `ssh_ensure_session` with a descriptive `session_name` to keep a persistent shell open across multiple tool calls. This reuses the SSH connection instead of opening a new one for each command.
+
+**Bandwidth-efficient patterns:**
+- Use `ssh_grep` with `output_mode: "content"` and `context` lines instead of grep-then-view
+- Batch multiple file edits into a single `ssh_edit` call with multiple `{old_str, new_str}` pairs
+- Use `ssh_view` with `view_range` to page large files rather than reading all at once
+
+**Security:**
+- ssh-mcp grants arbitrary remote command execution on `mini`
+- Session transcripts are written to `~/.local/state/ssh-mcp/` (mode 0600) and may contain secrets
+- Do not include secrets in command arguments
+- Periodically run `rm -rf ~/.local/state/ssh-mcp/` to clear transcripts when no longer needed
+</remote_mini_workflow>

@@ -1,0 +1,34 @@
+Task 6: Add remote mini SSH-MCP workflow guidance
+Date: 2026-07-23
+
+## Investigation
+
+### rules-injector.ts mechanism
+- Hooks on `tool.execute.after` for the "read" tool
+- Walks ancestor directories from the read file up to project root
+- Injects content of AGENTS.md or CLAUDE.md files found in subdirectories
+- SKIPS the project root (OpenCode natively handles root AGENTS.md/CLAUDE.md)
+
+### No root AGENTS.md exists
+- Neither AGENTS.md nor CLAUDE.md at project root
+- opencode.jsonc uses `{file:./agent-prompts/sisyphus.md}` as the primary agent prompt
+
+## Decision
+Appended `<remote_mini_workflow>` section to `agent-prompts/sisyphus.md` — the primary
+agent prompt loaded by OpenCode for the "Sisyphus - Ultraworker" default agent.
+Style matches existing XML-tag-wrapped sections in that file.
+
+## Change
+File: agent-prompts/sisyphus.md
+Type: additive only — 27 lines appended after the `</environment>` closing tag
+
+## Content summary
+- target="mini" with /Volumes/4T-ssd/source_data
+- NEVER use target="source_data" or target="labelled_bonds" (RemoteCommand+RequestTTY caveat)
+- Available tools: ssh_exec, ssh_view, ssh_create, ssh_edit, ssh_grep, ssh_glob, ssh_ensure_session, ssh_sync
+- Session preference: ssh_ensure_session for multi-step work
+- Bandwidth patterns: ssh_grep with output_mode/context, batch ssh_edit, ssh_view with view_range
+- Security: arbitrary exec warning, transcript location/mode, no secrets in args, periodic cleanup
+
+## Commit
+docs(agents): add remote mini ssh-mcp workflow guidance
