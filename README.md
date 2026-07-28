@@ -16,14 +16,14 @@ Personal, standalone re-implementation of the useful parts of
 
 ## Quick start
 
-One line (needs [bun](https://bun.sh) + git):
+One line (needs `git` + `npm` or [bun](https://bun.sh)):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/aidanmcgrath/goon-squad/main/install.sh | bash
 ```
 
 That clones the repo to `~/.goon-squad`, symlinks the config into your OpenCode
-config dir (non-destructively), and runs `bun install`. Then:
+config dir (non-destructively), and runs `npm install`. Then:
 
 1. **Restart OpenCode** - config loads once at startup.
 2. **Start working**. You land on **Sisyphus** by default. Just describe what
@@ -154,8 +154,7 @@ remove-ai-slops, coding-agent-sessions, init-deep, explore-solve.
 
 ## Installation
 
-**Requires [bun](https://bun.sh)** (`curl -fsSL https://bun.sh/install | bash`)
-and `git`.
+**Requires `git` and `npm`** (or [bun](https://bun.sh) as an alternative).
 
 **One-liner (self-cloning)** - no manual clone needed:
 
@@ -175,7 +174,7 @@ cd goon-squad
 ```
 
 `install.sh` symlinks the config into `$XDG_CONFIG_HOME/opencode` (or
-`~/.config/opencode`) and runs `bun install`. It's **non-destructive** - if you
+`~/.config/opencode`) and runs `npm install`. It's **non-destructive** - if you
 already have a real file where a link would go (e.g. an existing
 `opencode.jsonc`), it's backed up to `<name>.bak-<timestamp>` first. Re-running
 is safe.
@@ -202,11 +201,11 @@ ln -sfn "$(pwd)/plugin"          "$OPENCODE_CONFIG_DIR/plugin"
 ln -sfn "$(pwd)/command"         "$OPENCODE_CONFIG_DIR/command"
 ln -sfn "$(pwd)/skills"          "$OPENCODE_CONFIG_DIR/skills"
 
-bun install
+npm install
 ```
 </details>
 
-**Why `bun install` is required.** Symlinked plugins resolve `node_modules`
+**Why `npm install` is required.** Symlinked plugins resolve `node_modules`
 against this repo's *real* path, not the config dir. The single dependency is
 `@opencode-ai/plugin`. Skipping the install silently drops `goal.ts` (the only
 plugin with a real runtime import - `tool`; the other three import the `Plugin`
@@ -228,18 +227,18 @@ uses exactly three distinct models:
 |---|---|---|
 | **Opus** (heavy reasoning) | Sisyphus, Prometheus, Daedalus, Momus, Oracle, Nemesis | `amazon-bedrock/us.anthropic.claude-opus-4-8` |
 | **Sonnet** (balanced) | Atlas, Metis, Multimodal Looker, Sisyphus-Junior, Hermes | `amazon-bedrock/us.anthropic.claude-sonnet-4-6` |
-| **Haiku** (fast/cheap) | Explore, Librarian | `amazon-bedrock/anthropic.claude-haiku-4-5` |
+| **Haiku** (fast/cheap) | Explore, Librarian | `amazon-bedrock/anthropic.claude-haiku-4-5-20251001-v1:0` |
 
 Find-and-replace each provider-prefixed model ID with your provider's
 equivalent - the format is `provider/model` (e.g. `anthropic/claude-opus-4-5`,
-`openai/gpt-5.2`, `opencode/gpt-5.1-codex`). For example, to move everything to
+`openai/gpt-4o`, `openrouter/anthropic/claude-sonnet-4-5`). For example, to move everything to
 Anthropic direct:
 
 ```bash
 sed -i '' \
   -e 's#amazon-bedrock/us.anthropic.claude-opus-4-8#anthropic/claude-opus-4-5#g' \
   -e 's#amazon-bedrock/us.anthropic.claude-sonnet-4-6#anthropic/claude-sonnet-4-5#g' \
-  -e 's#amazon-bedrock/anthropic.claude-haiku-4-5#anthropic/claude-haiku-4-5#g' \
+  -e 's#amazon-bedrock/anthropic.claude-haiku-4-5-20251001-v1:0#anthropic/claude-haiku-4-5#g' \
   opencode.jsonc
 ```
 
@@ -253,7 +252,7 @@ Make sure the provider is authenticated in OpenCode (`/connect` or the relevant
 | Dir/file | What |
 |---|---|
 | `install.sh` | Non-destructive installer: symlinks config into OpenCode + runs `bun install` (`--uninstall` to reverse) |
-| `opencode.jsonc` | Agent registrations (`{file:...}` → `agent-prompts/`), plugin hooks, MCP servers (context7, grep_app, websearch, ssh-mcp, dan_mcp, playwright, github) |
+| `opencode.jsonc` | Agent registrations (`{file:...}` → `agent-prompts/`), plugin hooks, MCP servers (context7, grep_app, websearch, playwright — machine-specific servers go in git-ignored `opencode.local.jsonc`) |
 | `agent-prompts/` | Raw prompt bodies for the 13 agents (metadata lives in `opencode.jsonc`) |
 | `docs/` | Per-agent reference docs (`docs/<agent>/info.md`) |
 | `plugin/` | 4 local hooks: `edit-error-recovery`, `keyword-detector` (`ultrawork`), `goal` (persistent goals + idle auto-continue), `rules-injector` (nested `AGENTS.md`) |
