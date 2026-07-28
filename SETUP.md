@@ -27,12 +27,19 @@ Or use `npm` if you prefer — both work for the plugin install step.
 
 ## 2. Clone the Config
 
+If `~/.config/opencode` already exists, back it up first — then clone into the now-empty path:
+
 ```sh
+# Back up any existing config (keeps your auth tokens etc. safe in the .bak)
+mv ~/.config/opencode ~/.config/opencode.bak
+
+# Clone the squad config
 git clone git@github.com:Aidanmcgrath94/opencode-config.git ~/.config/opencode
 ```
 
-> If `~/.config/opencode` already exists, back it up first:
-> `mv ~/.config/opencode ~/.config/opencode.bak`
+> **Auth tokens are safe** — they live in `~/.local/share/opencode/`, not `~/.config/opencode/`, so the backup step is just for any custom local config you had, not your credentials.
+
+If you had anything worth keeping in the old config (custom agents, local settings), check `~/.config/opencode.bak` and merge what you need into the new clone.
 
 ---
 
