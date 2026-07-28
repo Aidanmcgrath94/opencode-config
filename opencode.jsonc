@@ -116,6 +116,41 @@
         }
       },
       "prompt": "{file:./agent-prompts/sisyphus-junior.md}"
+    },
+    "Daedalus - Problem Explorer": {
+      "description": "Problem-exploration consultant that explores and problem-solves BEFORE planning, then hands a framed problem to Prometheus. Conversational-first, autonomous when helpful. Never plans, never implements. Drives the explore-solve skill.",
+      "mode": "primary",
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "allow"
+      },
+      "prompt": "{file:./agent-prompts/daedalus.md}"
+    },
+    "Hermes - PR & GitHub Delivery": {
+      "description": "Delivery agent that owns the PR lifecycle (gh pr create/update/merge) and GitHub operations via the github MCP. Defers local commit/rebase/history to the git-master skill; operates only from the task-owned worktree after gates pass. Read-only to the filesystem.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/hermes.md}"
+    },
+    "Nemesis - Security Reviewer": {
+      "description": "Read-only, one-shot code security reviewer. Audits a diff/changed files against a 10-point security checklist and returns a structured PASS/FAIL verdict with severity. Security only - not style, architecture, or plan review.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "amazon-bedrock/us.anthropic.claude-opus-4-8",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "task": "deny"
+      },
+      "prompt": "{file:./agent-prompts/nemesis.md}"
     }
   },
   "mcp": {
@@ -134,9 +169,12 @@
       "url": "https://mcp.exa.ai/mcp?tools=web_search_exa",
       "enabled": true
     },
-    "ssh-mcp": {
+    "playwright": {
       "type": "local",
-      "command": ["/Users/aidanmcgrath/.local/bin/ssh-mcp"],
+      "command": ["npx", "-y", "@playwright/mcp@latest", "--headless", "--isolated"],
+      "environment": {
+        "PLAYWRIGHT_BROWSERS_PATH": "0"
+      },
       "enabled": true,
       "timeout": 30000
     }

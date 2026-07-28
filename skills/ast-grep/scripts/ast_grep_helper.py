@@ -235,7 +235,7 @@ def omo_runtime_binary() -> Optional[Path]:
     codex_home = os.environ.get("CODEX_HOME")
     if codex_home:
         candidates.append(Path(codex_home) / "runtime" / "ast-grep" / slug / binary_name)
-    candidates.append(Path.home() / ".omo" / "runtime" / "ast-grep" / slug / binary_name)
+    candidates.append(Path.home() / ".gs" / "runtime" / "ast-grep" / slug / binary_name)
 
     for path in candidates:
         if path.is_file() and os.access(path, os.X_OK):

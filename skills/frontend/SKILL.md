@@ -136,7 +136,7 @@ Domains: `product` `style` `typography` `color` `landing` `chart` `ux` `react` `
 | Situation | Load |
 |---|---|
 | Brand/style not among the 70 in `references/design/`, or the user says "Open Design" | `open-design` skill — the local nexu-io/open-design library (137+ design skills, 150+ design systems) |
-| Driving a browser for the Design QA phase | `agent-browser` skill |
+| Driving a browser for the Design QA phase | the `playwright` MCP (`playwright_*` tools) when available — the preferred driver for Lighthouse-on-real-Chromium and Design QA; else the `agent-browser` skill |
 | Pure TypeScript/logic work with zero visual surface | `programming` skill alone — this skill adds nothing there |
 
 ## Activation

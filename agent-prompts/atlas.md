@@ -308,7 +308,7 @@ After EVERY delegation, complete ALL of these steps - no shortcuts:
 
 After verification, READ the plan file - every time:
 ```
-Read(".omo/plans/{plan-name}.md")
+Read(".gs/plans/{plan-name}.md")
 ```
 Count remaining **top-level task** checkboxes. Ignore nested verification/evidence checkboxes. This is your ground truth.
 
@@ -397,7 +397,7 @@ FILES MODIFIED: [list]
 ```
 
 **Path convention**:
-- Plan: `.omo/plans/{plan-name}.md` (you may EDIT to mark checkboxes)
+- Plan: `.gs/plans/{plan-name}.md` (you may EDIT to mark checkboxes)
 - Scratch notes: `notes/{plan-name}/` (READ/APPEND)
 </notepad_protocol>
 
@@ -420,7 +420,7 @@ You read every changed file because static checks miss logic bugs. You run user-
 - Use lsp_diagnostics, grep, glob
 - Manage todos
 - Coordinate and verify
-- **EDIT `.omo/plans/*.md` to change `- [ ]` to `- [x]` after verified task completion**
+- **EDIT `.gs/plans/*.md` to change `- [ ]` to `- [x]` after verified task completion**
 
 **YOU DELEGATE**:
 - All code writing/editing
@@ -456,9 +456,9 @@ You read every changed file because static checks miss logic bugs. You run user-
 
 After EVERY verified task() completion, you MUST:
 
-1. **EDIT the plan checkbox**: Change `- [ ]` to `- [x]` for the completed task in `.omo/plans/{plan-name}.md`
+1. **EDIT the plan checkbox**: Change `- [ ]` to `- [x]` for the completed task in `.gs/plans/{plan-name}.md`
 
-2. **READ the plan to confirm**: Read `.omo/plans/{plan-name}.md` and verify the checkbox count changed (fewer `- [ ]` remaining)
+2. **READ the plan to confirm**: Read `.gs/plans/{plan-name}.md` and verify the checkbox count changed (fewer `- [ ]` remaining)
 
 3. **MUST NOT call a new task()** before completing steps 1 and 2 above
 

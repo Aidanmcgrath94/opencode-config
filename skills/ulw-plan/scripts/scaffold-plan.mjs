@@ -16,8 +16,8 @@
 //
 // WRITE BOUNDARY: the prometheus-md-only hook gates Write/Edit but NOT Bash, so
 // this node:fs script writes out of band of that hook. It self-guards THIS script's
-// own writes to resolve under .omo/ (it does not, and cannot, contain other Bash
-// commands; it only guarantees the mandated generator never escapes .omo). Mirrors
+// own writes to resolve under .gs/ (it does not, and cannot, contain other Bash
+// commands; it only guarantees the mandated generator never escapes .gs). Mirrors
 // packages/omo-opencode/src/hooks/prometheus-md-only/path-policy.ts.
 
 import { lstat, mkdir, writeFile, readFile, realpath } from "node:fs/promises";
@@ -72,7 +72,7 @@ export function parseArgs(argv) {
 	return { slug, intent, reset, force, draftOnly, reviewRequired };
 }
 
-// Resolve a project-relative path and confine it under .omo/ - the script's own
+// Resolve a project-relative path and confine it under .gs/ - the script's own
 // enforcement of the prometheus planner write boundary.
 export function resolveSafeOmoPath(cwd, relPath) {
 	const resolved = resolve(cwd, relPath);
@@ -80,8 +80,8 @@ export function resolveSafeOmoPath(cwd, relPath) {
 	if (rel.startsWith("..") || isAbsolute(rel)) {
 		throw new Error(`refused: path escapes the workspace root: ${relPath}`);
 	}
-	if (!/(^|[/\\])\.omo([/\\]|$)/i.test(rel)) {
-		throw new Error(`refused: ulw-plan may only write under .omo/: ${relPath}`);
+	if (!/(^|[/\\])\.gs([/\\]|$)/i.test(rel)) {
+		throw new Error(`refused: ulw-plan may only write under .gs/: ${relPath}`);
 	}
 	if (!resolved.toLowerCase().endsWith(".md")) {
 		throw new Error(`refused: ulw-plan may only write .md files: ${relPath}`);
@@ -122,15 +122,15 @@ async function mkdirWithoutSymlinks(dir, stopAt) {
 async function assertSafeWriteParent(cwd, target) {
 	const workspaceReal = await realpath(cwd);
 	const workspaceRoot = resolve(cwd);
-	const omoRoot = resolve(cwd, ".omo");
+	const gsRoot = resolve(cwd, ".gs");
 	const parent = dirname(target);
 	assertContainedPath(workspaceRoot, parent, `refused: path escapes the workspace root: ${target}`);
-	assertContainedPath(omoRoot, parent, `refused: ulw-plan may only write under .omo/: ${target}`);
+	assertContainedPath(gsRoot, parent, `refused: ulw-plan may only write under .gs/: ${target}`);
 	await mkdirWithoutSymlinks(parent, workspaceRoot);
-	const omoReal = await realpath(omoRoot);
+	const gsReal = await realpath(gsRoot);
 	const parentReal = await realpath(parent);
 	assertContainedPath(workspaceReal, parentReal, `refused: path escapes the workspace root through symlinks: ${target}`);
-	assertContainedPath(omoReal, parentReal, `refused: ulw-plan may only write under .omo/ through real paths: ${target}`);
+	assertContainedPath(gsReal, parentReal, `refused: ulw-plan may only write under .gs/ through real paths: ${target}`);
 }
 
 async function assertSafeWriteTarget(target) {
@@ -158,16 +158,16 @@ export function buildDraft(slug, intent, { reviewRequired = false } = {}) {
 			: "Record any default you adopt instead of asking, so the user can veto it at the gate.";
 	const reviewState = reviewRequired
 		? `review_required: true
-plan_path: .omo/plans/${slug}.md
+plan_path: .gs/plans/${slug}.md
 plan_sha256: null
 review_round_id: null
-pending-action: write and review .omo/plans/${slug}.md
+pending-action: write and review .gs/plans/${slug}.md
 review:
   momus:
     status: pending
     workspace_root: null
     runtime_home: null
-    target: .omo/plans/${slug}.md
+    target: .gs/plans/${slug}.md
     round_id: null
     plan_sha256: null
     launch_id: null
@@ -177,14 +177,14 @@ review:
     status: pending
     workspace_root: null
     runtime_home: null
-    target: .omo/plans/${slug}.md
+    target: .gs/plans/${slug}.md
     round_id: null
     plan_sha256: null
     launch_id: null
     session: null
     result: null`
 		: `review_required: false
-pending-action: write .omo/plans/${slug}.md`;
+pending-action: write .gs/plans/${slug}.md`;
 	return `---
 slug: ${slug}
 status: drafting
@@ -254,7 +254,7 @@ Your next move: <fill - e.g. approve, or run a high-accuracy review>. Full execu
 ## Verification strategy
 > Zero human intervention - all verification is agent-executed.
 - Test decision: <TDD | tests-after | none> + framework
-- Evidence: <attemptDir>/task-<N>-${slug}.<ext> (attemptDir = currentAttemptDir from 'omo ulw-loop status --json', .omo/evidence/ulw/<session>/<goalId>/a<attempt>; outside ulw-loop use .omo/evidence/)
+- Evidence: <attemptDir>/task-<N>-${slug}.<ext> (attemptDir = currentAttemptDir from 'omo ulw-loop status --json', .gs/evidence/ulw/<session>/<goalId>/a<attempt>; outside ulw-loop use .gs/evidence/)
 
 ## Execution strategy
 ### Parallel execution waves
@@ -307,10 +307,10 @@ export async function writeGuarded(cwd, relPath, content, { reset = false, force
 }
 
 export async function scaffold(cwd, { slug, intent, reset = false, force = false, draftOnly = false, reviewRequired = false }) {
-	const draftRel = join(".omo", "drafts", `${slug}.md`);
+	const draftRel = join(".gs", "drafts", `${slug}.md`);
 	const draft = await writeGuarded(cwd, draftRel, buildDraft(slug, intent, { reviewRequired }), { reset, force });
 	if (draftOnly) return [draft];
-	const planRel = join(".omo", "plans", `${slug}.md`);
+	const planRel = join(".gs", "plans", `${slug}.md`);
 	const plan = await writeGuarded(cwd, planRel, buildPlanSkeleton(slug, intent), { reset, force });
 	return [draft, plan];
 }

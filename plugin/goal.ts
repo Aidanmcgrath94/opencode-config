@@ -28,7 +28,7 @@ function nowSeconds() {
 }
 
 function goalDir(directory: string) {
-  return join(directory, ".omo", "goal")
+  return join(directory, ".gs", "goal")
 }
 
 function goalFilePath(directory: string, sessionID: string) {

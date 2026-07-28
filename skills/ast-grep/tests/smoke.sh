@@ -131,7 +131,7 @@ RUNTIME_BIN="sg"
 case "$RUNTIME_SLUG" in
   win32-*) RUNTIME_BIN="sg.exe" ;;
 esac
-FAKE_RUNTIME_SG="$RUNTIME_HOME/.omo/runtime/ast-grep/$RUNTIME_SLUG/$RUNTIME_BIN"
+FAKE_RUNTIME_SG="$RUNTIME_HOME/.gs/runtime/ast-grep/$RUNTIME_SLUG/$RUNTIME_BIN"
 fake_sg "$FAKE_RUNTIME_SG"
 HOME="$RUNTIME_HOME" CODEX_HOME= OMO_AST_GREP_SG_PATH= $HELPER doctor > "$OUTPUT_DIR/omo-runtime.out" 2>&1
 grep -Fq "ast-grep binary: $FAKE_RUNTIME_SG" "$OUTPUT_DIR/omo-runtime.out" || fail "OMO HOME runtime was not resolved: $(cat "$OUTPUT_DIR/omo-runtime.out")"

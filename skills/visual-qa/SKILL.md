@@ -48,7 +48,7 @@ Before any reviewer sees an image, verify each capture yourself: the file signat
 ### Web
 
 1. Capture a REFERENCE image: the user's mock/target, generated page snapshot, Figma export, source-site capture, or known-good baseline. Save as PNG. If the user provided overview text or annotations, save them next to the image and treat them as part of the reference packet.
-2. Capture the ACTUAL rendered screenshot at the same viewport size. In Codex, when `browser:control-in-app-browser` is available and the page does not need an authenticated user browser session, use that Browser plugin first for navigation, page state inspection, and screenshots. If it is unavailable or lacks the needed capture action, use the project's configured browser tooling (the playwright, agent-browser, or dev-browser skill). Save as PNG. If none is configured or available, install [agent-browser](https://github.com/vercel-labs/agent-browser) (`npm install -g agent-browser && agent-browser install`) and capture with it — see `$SKILL_DIR/references/agent-browser-setup.md` for the full setup, including how to shoot a fixed-viewport screenshot.
+2. Capture the ACTUAL rendered screenshot at the same viewport size. When the `playwright` MCP server is available, PREFER its `playwright_*` tools for navigation, page-state inspection, and fixed-viewport screenshots (this is the default browser driver in OpenCode). Otherwise, in Codex, when `browser:control-in-app-browser` is available and the page does not need an authenticated user browser session, use that Browser plugin first for navigation, page state inspection, and screenshots. If it is unavailable or lacks the needed capture action, use the project's configured browser tooling (the playwright, agent-browser, or dev-browser skill). Save as PNG. If none is configured or available, install [agent-browser](https://github.com/vercel-labs/agent-browser) (`npm install -g agent-browser && agent-browser install`) and capture with it — see `$SKILL_DIR/references/agent-browser-setup.md` for the full setup, including how to shoot a fixed-viewport screenshot.
 3. Run the diff and keep the JSON:
 
 ```
@@ -70,7 +70,7 @@ For reference-fidelity work, repeat the capture and diff for every referenced vi
 node script/qa/web-terminal-visual-qa.mjs --title "TUI Visual QA" \
   --command "<tui-command>" \
   --input "{ArrowDown}" --input "{Enter}" \
-  --evidence-dir .omo/evidence/<slug>/tui-web-terminal
+  --evidence-dir .gs/evidence/<slug>/tui-web-terminal
 ```
 
    Replay a saved raw stream with `--from-file <capture.ansi>` instead of
@@ -82,7 +82,7 @@ node script/qa/web-terminal-visual-qa.mjs --title "TUI Visual QA" \
 2. Run the width check on the produced text and keep the JSON:
 
 ```
-node "$SKILL_DIR/scripts/visual-qa.mjs" tui-check .omo/evidence/<slug>/tui-web-terminal/terminal.txt --cols <N>
+node "$SKILL_DIR/scripts/visual-qa.mjs" tui-check .gs/evidence/<slug>/tui-web-terminal/terminal.txt --cols <N>
 ```
 
 Key fields: `maxWidth`, `overflowLines[]`, `borderMisaligned`, `wideCharColumns[]`, `hasAnsi`.

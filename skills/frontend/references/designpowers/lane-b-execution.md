@@ -24,7 +24,7 @@ Add this block to each `start-work` implementation worker that touches UI:
 ```text
 Load `frontend` for UI implementation. Also apply Lane B Design Execution Guidance.
 
-Use the OpenAgent plan and `.omo/frontend-design/state.md` as source of truth. Carry forward:
+Use the OpenAgent plan and `.gs/frontend-design/state.md` as source of truth. Carry forward:
 - design principles, personas, taste direction, and accepted trade-offs
 - ui-composition requirements for hierarchy, spacing, type, color, contrast, and touch targets
 - interaction-design requirements for all states, feedback, keyboard, touch, loading, empty, and error paths

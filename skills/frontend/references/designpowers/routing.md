@@ -27,7 +27,7 @@ When planning is needed, `designpowers` supplies design-specific context and let
 
 ## Execution Through `/start-work`
 
-When a plan is approved or selected, `/start-work` remains the orchestrator. `designpowers` only enriches worker prompts with design context from `.omo/frontend-design/state.md` and the selected plan. Worker prompts should carry:
+When a plan is approved or selected, `/start-work` remains the orchestrator. `designpowers` only enriches worker prompts with design context from `.gs/frontend-design/state.md` and the selected plan. Worker prompts should carry:
 
 - the exact plan checkbox and files in scope;
 - design-state constraints that affect the task;
@@ -66,7 +66,7 @@ Use `/review-work` as the final gate for significant implementation work. The re
 
 - original goal and design constraints;
 - changed files and diff;
-- `.omo/frontend-design/state.md` path when used;
+- `.gs/frontend-design/state.md` path when used;
 - frontend design/perfection verification outputs;
 - `/visual-qa` artifact paths;
 - persona walkthrough results;

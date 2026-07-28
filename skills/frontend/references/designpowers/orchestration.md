@@ -4,7 +4,7 @@ This reference defines shared state and prompt semantics for designpowers guidan
 
 ## Shared State
 
-Use `.omo/frontend-design/state.md` as the design operating ledger when the active workflow is allowed to write OpenAgent state. If the current task forbids editing `.omo`, read it as context only and report any needed updates in the handoff.
+Use `.gs/frontend-design/state.md` as the design operating ledger when the active workflow is allowed to write OpenAgent state. If the current task forbids editing `.gs`, read it as context only and report any needed updates in the handoff.
 
 Recommended sections:
 

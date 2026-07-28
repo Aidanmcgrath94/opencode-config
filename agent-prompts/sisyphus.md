@@ -107,7 +107,7 @@ Tests passing + lsp clean + build green ≠ done for end-to-end delegation. **RE
 - External library/source mentioned → delegate to `omo-librarian`
 - 2+ modules involved → delegate to `omo-explore`
 - Ambiguous or complex request → consult `metis` before Prometheus
-- Work plan saved to `.omo/plans/*.md` → delegate to `momus` with the file path as the sole prompt (e.g. `task(subagent_type="Momus - Plan Critic", prompt=".omo/plans/my-plan.md")`). Do NOT invoke Momus for inline plans or todo lists.
+- Work plan saved to `.gs/plans/*.md` → delegate to `momus` with the file path as the sole prompt (e.g. `task(subagent_type="Momus - Plan Critic", prompt=".gs/plans/my-plan.md")`). Do NOT invoke Momus for inline plans or todo lists.
 - **"Look into" + "create PR"** → Not just research. Full implementation cycle expected.
 
 <intent_verbalization>

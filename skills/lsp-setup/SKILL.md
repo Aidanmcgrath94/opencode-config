@@ -81,7 +81,7 @@ file extension. Write config only to: pick between competing servers, set a
 Two project-scoped config files, **identical JSON shape**:
 
 - Codex harness → `.codex/lsp-client.json` (user: `~/.codex/lsp-client.json`)
-- OpenCode/omo harness → `.opencode/lsp.json` (also `.omo/lsp.json`)
+- OpenCode/omo harness → `.opencode/lsp.json` (also `.gs/lsp.json`)
 
 ```jsonc
 {
