@@ -28,7 +28,7 @@ Or use `npm` if you prefer — both work for the plugin install step.
 ## 2. Clone the Config
 
 ```sh
-git clone git@github.com:aidanmcgrath/opencode-config.git ~/.config/opencode
+git clone git@github.com:Aidanmcgrath94/opencode-config.git ~/.config/opencode
 ```
 
 > If `~/.config/opencode` already exists, back it up first:
