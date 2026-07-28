@@ -49,8 +49,8 @@ The config includes custom plugins that depend on `@opencode-ai/plugin`. Install
 
 ```sh
 cd ~/.config/opencode
-bun install
-# or: npm install
+npm install
+# or if you have bun: bun install
 ```
 
 This reads `package.json` in the config directory and installs the required packages locally. Without this step the plugins will fail to load.
