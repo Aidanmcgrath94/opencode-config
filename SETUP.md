@@ -112,98 +112,7 @@ source ~/.zshrc
 
 ---
 
-## 6. Optional: Machine-Specific MCP Servers
-
-The base config gives you 4 universal MCP servers (context7, grep_app, websearch, playwright). If you also want `ssh-mcp`, `dan_mcp`, and the GitHub MCP remote server, follow these steps.
-
-### 6a. Install ssh-mcp
-
-Download or build the `ssh-mcp` binary and place it at `~/.local/bin/ssh-mcp`:
-
-```sh
-mkdir -p ~/.local/bin
-# Download the binary from https://github.com/slepp/ssh-mcp (or your source)
-# and move it to:
-mv /path/to/ssh-mcp ~/.local/bin/ssh-mcp
-chmod +x ~/.local/bin/ssh-mcp
-```
-
-### 6b. Check out dan-mcp
-
-```sh
-mkdir -p ~/code
-git clone <dan-mcp-repo-url> ~/code/dan-mcp
-```
-
-### 6c. Install uv
-
-`dan_mcp` is run via `uv`:
-
-```sh
-brew install uv
-```
-
-### 6d. Create opencode.local.jsonc
-
-Create `~/.config/opencode/opencode.local.jsonc` with the following content. Replace all `<...>` placeholders with the actual absolute paths on your machine (use `which uv`, `which ssh-mcp` / `echo ~/.local/bin/ssh-mcp`, etc.):
-
-```jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "ssh-mcp": {
-      "type": "local",
-      "command": ["<absolute-path-to-ssh-mcp-binary>"],
-      "enabled": true,
-      "timeout": 30000
-    },
-    "dan_mcp": {
-      "type": "local",
-      "command": ["<absolute-path-to-uv>", "run", "--directory", "<path-to-dan-mcp-repo>", "dan-mcp"],
-      "enabled": true,
-      "timeout": 30000
-    },
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}",
-        "X-MCP-Toolsets": "repos,issues,pull_requests"
-      },
-      "oauth": false,
-      "enabled": true
-    }
-  }
-}
-```
-
-**Example filled-in values** (substitute your actual paths):
-
-| Placeholder | Example value |
-|---|---|
-| `<absolute-path-to-ssh-mcp-binary>` | `/home/<your-username>/.local/bin/ssh-mcp` |
-| `<absolute-path-to-uv>` | `/opt/homebrew/bin/uv` (run `which uv`) |
-| `<path-to-dan-mcp-repo>` | `/home/<your-username>/code/dan-mcp` |
-
-> `opencode.local.jsonc` is git-ignored — it will never be committed. Safe to put machine-specific absolute paths here.
-
-### 6e. Point opencode at the local config
-
-Add to `~/.zshrc`:
-
-```sh
-export OPENCODE_CONFIG=~/.config/opencode/opencode.local.jsonc
-```
-
-Then reload:
-
-```sh
-source ~/.zshrc
-```
-
----
-
-## 7. Verify
+## 6. Verify
 
 Launch opencode:
 
@@ -216,23 +125,17 @@ opencode
 | Setup | MCP Servers | Agents |
 |---|---|---|
 | Base (steps 1–5) | 4 (context7, grep_app, websearch, playwright) | 12 |
-| With optional override (step 6) | 6 (+ ssh-mcp, dan_mcp / github) | 12 |
 
-All 12 agents should be available regardless: Prometheus, Atlas, Oracle, Sisyphus, Daedalus, and the rest of the squad.
+All 12 agents should be available: Prometheus, Atlas, Oracle, Sisyphus, Daedalus, and the rest of the squad.
 
 If an MCP server fails to connect, check:
-- The binary path in `opencode.local.jsonc` is correct and executable
 - `GITHUB_PERSONAL_ACCESS_TOKEN` is set in your current shell (`echo $GITHUB_PERSONAL_ACCESS_TOKEN`)
-- `uv` is on your PATH (`which uv`)
 
 ---
 
 ## Quick Reference
 
 ```
-~/.config/opencode/          ← cloned from git (agents, skills, plugins, base MCP)
-~/.config/opencode/opencode.local.jsonc  ← git-ignored, machine-specific MCP overrides
+~/.config/opencode/          ← cloned from git (agents, skills, plugins, MCP config)
 ~/.local/share/opencode/     ← auth tokens (not synced, per-device)
-~/.local/bin/ssh-mcp         ← ssh-mcp binary
-~/code/dan-mcp/              ← dan-mcp repo
 ```
